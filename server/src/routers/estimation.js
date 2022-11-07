@@ -9,59 +9,29 @@ router.post("/add-estimation", async (req, res) => {
     const estimate = await Estimation.findOne({
       projectName: req.body.projectName,
       developerName: req.body.developerName,
-      taskName: req.body.taskName
     });
+
     estimate.startingDate = req.body.startingDate;
     estimate.estimation = req.body.estimation;
+
     await estimate.save();
 
     res.send(estimate);
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+  }
 });
 
-// get-developer-project-list
-
-router.get("/get-developer-project-list/:developerName", async (req, res) => {
-  console.log(req.params);
+router.post("/get-developer-project", async (req, res) => {
   try {
-    const estimate = await Estimation.find({
-      developerName: req.params.developerName,
+    const developerProject = await Estimation.find({
+      developerName: req.body.developerName,
     });
-    console.log(estimate);
 
-    // let projects = [];
-    // for (let i=0; i<estimate.length; i++){
-    //   if(estimate[i].projectName in projects){
-    //     continue;
-    //   }
-    //   else{
-    //     projects.push(estimate[i])
-    //   }
-    // }
-    // let uniqueProjects = [...new Set(projects)];
-    // console.log(uniqueProjects)
-   res.send(estimate);
+    res.send(developerProject);
   } catch (error) {}
 });
 
-router.get("/get-taskList/:projectName", async(req, res) => {
-  try{
-    const estimate = await Estimation.find({
-      projectName: req.params.projectName
-    });
-    let taskList = [];
-    for (let i=0; i<estimate.length; i++){
-      if(taskList.estimation){
-        continue;
-      }
-      else{
-        taskList.push(estimate[i]);
-      }
-    }
-    console.log(taskList)
-    res.send(estimate);
-  } catch(error) {}
-})
 router.post("/assign-project", async (req, res) => {
   try {
     const estimate = await Estimation(req.body);
